@@ -12,17 +12,21 @@ get_status() {
     fi
 }
 
-# 1. Start up the replica and Rosetta API.
+stop() {
+    docker-compose stop
+    exit $1
+}
+
+# 0. Start up the replica and Rosetta API.
 docker-compose up --build --force-recreate -d
 
-# 2. Wait until the rosetta API is ready.
+# 1. Wait until the rosetta API is ready.
 max_attempts=1000;
 until [ $(get_status) ]; do
     max_attempts=$((max_attempts-1));
     if [ $max_attempts -eq 0 ]; then
         echo "Failed to start up the replica and icx-proxy.";
-        docker-compose stop
-        exit 1;
+        stop 1;
     fi
     echo "Waiting for the replica and Rosetta API to start up...";
     sleep 10;
@@ -30,8 +34,8 @@ done
 
 echo "Replica and Rosetta API are ready.";
 
-# 3. Environment has been set up. Run the actual tests.
+# 2. Environment has been set up. Run the actual tests.
 npm run e2e
 
-# 4. Stop the running container.
-docker-compose stop
+# 3. Stop the running container.
+stop 0
