@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  environ:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    ports:
+      - 9000:9000
+      - 10000:10000
+    volumes:
+      - ./data:/data
