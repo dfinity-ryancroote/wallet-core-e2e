@@ -21,7 +21,7 @@ stop() {
 docker-compose up --build --force-recreate -d
 
 # 1. Wait until the rosetta API is ready.
-max_attempts=1000;
+max_attempts=100;
 until [ $(get_status) ]; do
     max_attempts=$((max_attempts-1));
     if [ $max_attempts -eq 0 ]; then
